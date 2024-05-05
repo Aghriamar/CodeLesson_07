@@ -1,55 +1,46 @@
 ﻿#include <iostream>
+#include <vector>
 
+template<typename T>
 class Stack {
 private:
-    int* data; 
-    int size;  
-    int capacity; 
-
+    std::vector<T> elements;
 public:
-    Stack(int initialCapacity = 10) {
-        data = new int[initialCapacity]; 
-        size = 0; 
-        capacity = initialCapacity;
+    void push(const T& value) {
+        elements.push_back(value);
     }
 
-    ~Stack() {
-        delete[] data; 
-    }
-
-    void push(int value) {
-        if (size == capacity) {
-            capacity *= 2;
-            int* newData = new int[capacity]; 
-            for (int i = 0; i < size; ++i) {
-                newData[i] = data[i]; 
-            }
-            delete[] data; 
-            data = newData; 
+    T pop() {
+        if (elements.empty()) {
+            throw std::out_of_range("Stack is empty");
         }
-        data[size++] = value; 
+        T value = elements.back();
+        elements.pop_back();
+        return value;
     }
 
-    
-    int pop() {
-        if (size == 0) {
-            std::cerr << "Error: Stack is empty!" << std::endl;
-            return -1; 
-        }
-        return data[--size]; 
+    bool isEmpty() const {
+        return elements.empty();
     }
 };
 
 int main() {
-    Stack stack; 
+    Stack<int> intStack;
+    intStack.push(10);
+    intStack.push(20);
+    intStack.push(30);
 
-    stack.push(10);
-    stack.push(20);
-    stack.push(30);
+    while (!intStack.isEmpty()) {
+        std::cout << intStack.pop() << std::endl;
+    }
 
-    std::cout << "Popped element: " << stack.pop() << std::endl;
-    std::cout << "Popped element: " << stack.pop() << std::endl;
-    std::cout << "Popped element: " << stack.pop() << std::endl;
+    Stack<std::string> stringStack;
+    stringStack.push("Hello");
+    stringStack.push("World");
+
+    while (!stringStack.isEmpty()) {
+        std::cout << stringStack.pop() << std::endl;
+    }
 
     return 0;
 }
